@@ -49,7 +49,7 @@ class Factoids
       value.indexOf(str) > -1 || a.indexOf(str) > -1
 
   list: ->
-    Object.keys(@data)
+    Object.keys @data
 
   forget: (key) ->
     fact = @get key
