@@ -79,14 +79,14 @@ module.exports = (robot) ->
     msg.reply "OK, aliased #{key} to #{target}" if factoids.set key, "@#{msg.match[2]}", msg.message.user.name, false
 
   # forget <factoid>
-  robot.respond /forget (.+)$/i, (msg) =>
+  robot.respond /forget (.+)/i, (msg) =>
     if factoids.forget msg.match[1]
       msg.reply "OK, forgot #{msg.match[1]}"
     else
       msg.reply 'Not a factoid'
 
   # remember <factoid>
-  robot.respond /remember (.+)$/i, (msg) =>
+  robot.respond /remember (.+)/i, (msg) =>
     factoid = factoids.remember msg.match[1]
     if factoid? and not factoid.forgotten
       msg.reply "OK, #{msg.match[1]} is #{factoid.value}"
@@ -97,7 +97,7 @@ module.exports = (robot) ->
   robot.respond /factoids/i, (msg) ->
     msg.send factoids.list().join('\n')
 
-  robot.respond /search (.+)$/i, (msg) =>
+  robot.respond /search (.+)/i, (msg) =>
     factoids = factoids.search msg.match[1]
 
     if factoids.length > 0
@@ -105,12 +105,12 @@ module.exports = (robot) ->
     else
       msg.reply 'No factoids matched'
 
-  robot.respond /drop (.+)$/i, (msg) =>
+  robot.respond /drop (.+)/i, (msg) =>
     user = msg.envelope.user
     isAdmin = robot.auth?.hasRole(user, 'factoids-admin') or robot.auth?.hasRole(user, 'admin')
     if isAdmin or not robot.auth?
       factoid = msg.match[1]
       if factoids.drop factoid
         msg.reply "OK, #{factoid} has been dropped"
-      else msg.reply "Not a factoid"
+      else msg.reply '"#{factoid}" is not a factoid'
     else msg.reply "You don't have permission to do that."
