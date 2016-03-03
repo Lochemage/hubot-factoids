@@ -29,6 +29,11 @@ class Factoids
 
     @data[key.toLowerCase()] = fact
 
+  add: (key, value, who, resolveAlias) ->
+    fact = @get key, resolveAlias
+    fact = fact + ", and is also " + value
+    @set key, fact, who, resolveAlias
+
   get: (key, resolveAlias = true) ->
     fact = @data[key.toLowerCase()]
     alias = fact?.value?.match /^@([^@].+)$/i
@@ -42,6 +47,9 @@ class Factoids
     keys.filter (a) =>
       value = @data[a].value
       value.indexOf(str) > -1 || a.indexOf(str) > -1
+
+  list: ->
+    Object.keys(@data)
 
   forget: (key) ->
     fact = @get key
