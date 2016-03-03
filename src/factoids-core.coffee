@@ -61,7 +61,7 @@ class Factoids
     keys.filter (a) =>
       if @data[a].forgotten
         false
-      else true
+      else @data[a].value
 
   forget: (key) ->
     fact = @get key
