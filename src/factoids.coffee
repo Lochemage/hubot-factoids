@@ -13,7 +13,6 @@
 #   <factoid>? - Prints the factoid, if it exists.
 #   ~<factoid> is <some phrase, link, whatever> - Creates or overwrites a factoid.
 #   ~<factoid> is also <some phrase, link, whatever> - Adds another phrase to a factoid.
-#   ~<factoid> edit s/expression/replace/gi - Edit an existing factoid.
 #   ~<factoid> alias of <factoid> - Add an alternate name for a factoid.
 #   ~tell <user> about <factoid> - Tells the user about a factoid, if it exists
 #   hubot no, <factoid> is <some phrase, link, whatever> - Replaces the full definition of a factoid
@@ -38,50 +37,25 @@ module.exports = (robot) ->
       fact.popularity++
       msg.reply msg.match[1] + " is " + fact.value
 
-  # tell <user> about <factoid>
-  robot.hear /^~tell (.+?) about (.+)/i, (msg) ->
-    fact = factoids.get msg.match[2]
-    if fact and not fact.forgotten
-      fact.popularity++
-      msg.send msg.match[1] + ": " + msg.match[2] + " is " + fact.value
-
-  # <factoid> is also <value>
-  # robot.hear /^~(.+?) is also (.+)/i, (msg) ->
-  #   [key, value] = [msg.match[1], msg.match[2]]
-  #   factoids.add key, value, msg.message.user.name
-
-  # <factoid> edit <value>
-  robot.hear /^~(.+?) edit s\/(.+)\/(.+)\/(.*)/i, (msg) ->
-    key = msg.match[1]
-    re = new RegExp(msg.match[2], msg.match[4])
-    fact = factoids.get key
-    value = fact?.value.replace re, msg.match[3]
-
-    factoid = factoids.set key, value, msg.message.user.name if value?
-
-    if factoid? and factoid.value?
-      msg.reply "OK, #{key} is now #{factoid.value}"
-    else
-      msg.reply 'Not a factoid'
-
-  # <factoid> is [also] <value>
-  robot.hear /^~(.+?) is (.+)/i, (msg) ->
-
-    if match = (/^~(.+?) is also (.+)/i.exec msg.match)
-      [key, value] = [match[1], match[2]]
-      factoid = factoids.add key, value, msg.message.user.name
-    else
-      [key, value] = [msg.match[1], msg.match[2]]
-      factoid = factoids.set key, value, msg.message.user.name
-
-    if factoid.value?
+  robot.hear /^~(.+)/i, (msg) ->
+    key = '';
+    # tell <user> about <factoid>
+    if match = /^~tell (.+) about (.+)/i.exec msg.match
+      fact = factoids.get msg.match[2]
+      if fact and not fact.forgotten
+        fact.popularity++
+        msg.send msg.match[1] + ": " + msg.match[2] + " is " + fact.value
+    # <factoid> is alias of <value>
+    else if match = /^~(.+?) alias of (.+)/i.exec msg.match
+      msg.reply "OK, #{key} is now an alias of #{match[2]}" if factoids.set key, "@#{match[2]}", msg.message.user.name, false
+    # <factoid> is also <value>
+    else if match = /^~(.+?) is also (.+)/i.exec msg.match
+      factoid = factoids.add match[1], match[2], msg.message.user.name
       msg.reply "OK, #{key} is #{factoid.value}"
-
-  # <factoid> alias of <value>
-  robot.hear /^~(.+?) alias of (.+)/i, (msg) ->
-    [key, target] = [msg.match[1], msg.match[2]]
-    who = msg.message.user.name
-    msg.reply "OK, aliased #{key} to #{target}" if factoids.set key, "@#{msg.match[2]}", msg.message.user.name, false
+    # <factoid> is <value>
+    else if match = /^~(.+?) is (.+)/i.exec msg.match
+      factoid = factoids.set match[1], match[2], msg.message.user.name
+      msg.reply "OK, #{key} is #{factoid.value}"
 
   # forget <factoid>
   robot.respond /forget (.+)/i, (msg) =>
