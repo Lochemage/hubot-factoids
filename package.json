@@ -1,11 +1,11 @@
 {
-  "name": "hubot-factoids",
+  "name": "hubot-factoids-loche",
   "description": "Factoids for Hubot",
   "version": "0.2.5",
   "author": {
-    "name": "Kevin Lanni",
-    "email": "therealklanni@gmail.com",
-    "url": "https://github.com/therealklanni"
+    "name": "Jeff Houde",
+    "email": "lochemage@webcabin.org",
+    "url": "https://github.com/lochemage"
   },
   "license": "MIT",
   "keywords": [
@@ -15,10 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/hubot-scripts/hubot-factoids.git"
-  },
-  "bugs": {
-    "url": "https://github.com/hubot-scripts/hubot-factoids/issues"
+    "url": "git://github.com/Lochemage/hubot-factoids"
   },
   "dependencies": {
     "coffee-script": "~1.6"
