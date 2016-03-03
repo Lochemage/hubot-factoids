@@ -66,11 +66,12 @@ module.exports = (robot) ->
 
   # <factoid> is [also] <value>
   robot.hear /^~(.+?) is (.+)/i, (msg) ->
-    [key, value] = [msg.match[1], msg.match[2]]
 
     if match = (/^~(.+?) is also (.+)/i.exec msg.match)
-      factoid = factoids.add key, msg.match[2], msg.message.user.name
+      [key, value] = [match[1], match[2]]
+      factoid = factoids.add key, value, msg.message.user.name
     else
+      [key, value] = [msg.match[1], msg.match[2]]
       factoid = factoids.set key, value, msg.message.user.name
 
     if factoid.value?
