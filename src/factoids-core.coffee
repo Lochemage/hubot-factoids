@@ -56,7 +56,7 @@ class Factoids
       value.indexOf(str) > -1 || a.indexOf(str) > -1
 
   list: ->
-    Object.keys @data
+    keys = Object.keys @data
 
     keys.filter (a) =>
       if @data[a].forgotten
