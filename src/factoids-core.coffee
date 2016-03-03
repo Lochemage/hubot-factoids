@@ -43,7 +43,7 @@ class Factoids
 
   has: (key) ->
     if key of @data
-      true
+      return true
     false
 
   search: (str) ->

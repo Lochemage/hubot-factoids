@@ -112,5 +112,5 @@ module.exports = (robot) ->
       factoid = msg.match[1]
       if factoids.drop factoid
         msg.reply "OK, #{factoid} has been dropped"
-      else msg.reply "#{factoid} is not a factoid"
+      else msg.reply "Not a factoid"
     else msg.reply "You don't have permission to do that."
