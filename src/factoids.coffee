@@ -32,26 +32,26 @@ module.exports = (robot) ->
   @factoids = new Factoids robot
 
   # <factoid>?
-  robot.hear /(.+)\?/i, (msg) ->
+  robot.hear /(.{3,})\?/i, (msg) ->
     fact = @factoids.get msg.match[1]
     if fact and not fact.forgotten
       fact.popularity++
       msg.reply msg.match[1] + " is " + fact.value
 
   # tell <user> about <factoid>
-  robot.hear /^~tell (.+) about (.+)/i, (msg) ->
+  robot.hear /^~tell (.+) about (.{3,})/i, (msg) ->
     fact = @factoids.get msg.match[2]
     if fact and not fact.forgotten
       fact.popularity++
       msg.send msg.match[1] + ": " + msg.match[2] + " is " + fact.value
 
   # <factoid> is also <value>
-  robot.hear /^~(.+?) is also (.+)/i, (msg) ->
+  robot.hear /^~(.{3,}) is also (.+)/i, (msg) ->
     [key, value] = msg.match[1], msg.match[2]
     @factoids.add key, value, msg.message.user.name
 
   # <factoid> edit <value>
-  robot.hear /^~(.+?) edit s\/(.+)\/(.+)\/(.*)/i, (msg) ->
+  robot.hear /^~(.{3,}) edit s\/(.+)\/(.+)\/(.*)/i, (msg) ->
     key = msg.match[1]
     re = new RegExp(msg.match[2], msg.match[4])
     fact = @factoids.get key
@@ -65,7 +65,7 @@ module.exports = (robot) ->
       msg.reply 'Not a factoid'
 
   # <factoid> is <value>
-  robot.hear /^~(.+?) is (.+)/i, (msg) ->
+  robot.hear /^~(.{3,}) is (.+)/i, (msg) ->
     [key, value] = msg.match[1], msg.match[2]
     factoid = @factoids.set key, value, msg.message.user.name
 
@@ -73,10 +73,10 @@ module.exports = (robot) ->
       msg.reply "OK, #{key} is #{factoid.value}"
 
   # <factoid> alias of <value>
-  robot.hear /^~(.+?) alias of (.+)/i, (msg) ->
+  robot.hear /^~(.{3,}) alias of (.{3,})/i, (msg) ->
     [key, target] = msg.match[1], msg.match[2]
     who = msg.message.user.name
-    msg.reply "OK, aliased #{key} to #{target}" if @factoids.set key, "@#{target}", msg.message.user.name, false
+    msg.reply "OK, aliased #{key} to #{target}" if @factoids.set key, "@#{msg.match[2]}", msg.message.user.name, false
 
   # forget <factoid>
   robot.respond /forget (.{3,})/i, (msg) =>
