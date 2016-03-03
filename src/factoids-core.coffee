@@ -60,13 +60,8 @@ class Factoids
 
     keys.filter (a) =>
       if @data[a].forgotten
-        return false
-      
-      if a.indexOf('http')
-        delete @data[a]
-        return false
-
-      @data[a].value
+        false
+      else true
 
   forget: (key) ->
     fact = @get key
