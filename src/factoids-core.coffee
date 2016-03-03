@@ -43,11 +43,8 @@ class Factoids
 
   has: (key) ->
     if key of @data
-      console.log "Has key"
       true
-    else
-      console.log "No key"
-      false
+    else false
 
   search: (str) ->
     keys = Object.keys @data
@@ -63,9 +60,6 @@ class Factoids
 
     keys.filter (a) =>
       if @data[a].forgotten
-        return false
-      if not @data[a].value
-        delete @data[a]
         false
       else true
 
