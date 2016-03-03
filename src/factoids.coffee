@@ -11,10 +11,10 @@
 #
 # Commands:
 #   <factoid>? - Prints the factoid, if it exists.
-#   ~<factoid> is <some phrase, link, whatever> - Creates a factoid
-#   ~<factoid> is also <some phrase, link, whatever> - Updates a factoid.
-#   ~<factoid> edit s/expression/replace/gi - Edit a factoid
-#   ~<factoid> alias of <factoid>
+#   ~<factoid> is <some phrase, link, whatever> - Creates or overwrites a factoid.
+#   ~<factoid> is also <some phrase, link, whatever> - Adds another phrase to a factoid.
+#   ~<factoid> edit s/expression/replace/gi - Edit an existing factoid.
+#   ~<factoid> alias of <factoid> - Add an alternate name for a factoid.
 #   ~tell <user> about <factoid> - Tells the user about a factoid, if it exists
 #   hubot no, <factoid> is <some phrase, link, whatever> - Replaces the full definition of a factoid
 #   hubot forget <factoid> - Forget a factoid.
@@ -46,9 +46,9 @@ module.exports = (robot) ->
       msg.send msg.match[1] + ": " + msg.match[2] + " is " + fact.value
 
   # <factoid> is also <value>
-  robot.hear /^~(.+?) is also (.+)/i, (msg) ->
-    [key, value] = [msg.match[1], msg.match[2]]
-    factoids.add key, value, msg.message.user.name
+  # robot.hear /^~(.+?) is also (.+)/i, (msg) ->
+  #   [key, value] = [msg.match[1], msg.match[2]]
+  #   factoids.add key, value, msg.message.user.name
 
   # <factoid> edit <value>
   robot.hear /^~(.+?) edit s\/(.+)\/(.+)\/(.*)/i, (msg) ->
@@ -64,10 +64,14 @@ module.exports = (robot) ->
     else
       msg.reply 'Not a factoid'
 
-  # <factoid> is <value>
+  # <factoid> is [also] <value>
   robot.hear /^~(.+?) is (.+)/i, (msg) ->
     [key, value] = [msg.match[1], msg.match[2]]
-    factoid = factoids.set key, value, msg.message.user.name
+
+    if match = (/^~(.+?) is also (.+)/i.exec msg.match)
+      factoid = factoids.add key, msg.match[2], msg.message.user.name
+    else
+      factoid = factoids.set key, value, msg.message.user.name
 
     if factoid.value?
       msg.reply "OK, #{key} is #{factoid.value}"
