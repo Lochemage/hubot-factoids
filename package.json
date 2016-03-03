@@ -1,7 +1,7 @@
 {
   "name": "hubot-factoids-loche",
   "description": "Factoids for Hubot",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "author": {
     "name": "Jeff Houde",
     "email": "lochemage@webcabin.org",
