@@ -74,7 +74,7 @@ module.exports = (robot) ->
 
   # <factoid> alias of <value>
   robot.hear /^~(.{3,}) alias of (.{3,})/i, (msg) ->
-    [key, target] = msg.match[1], msg.match[2]
+    [key, target] = [msg.match[1], msg.match[2]]
     who = msg.message.user.name
     msg.reply "OK, aliased #{key} to #{target}" if @factoids.set key, "@#{msg.match[2]}", msg.message.user.name, false
 
