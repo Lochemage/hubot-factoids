@@ -110,10 +110,7 @@ module.exports = (robot) ->
     isAdmin = robot.auth?.hasRole(user, 'factoids-admin') or robot.auth?.hasRole(user, 'admin')
     if isAdmin or not robot.auth?
       factoid = msg.match[1]
-      console.log "Matched #{factoid}"
       if factoids.drop factoid
         msg.reply "OK, #{factoid} has been dropped"
-      else
-        console.log "failed with #{factoid}"
-        msg.reply "#{factoid} is not a factoid"
+      else msg.reply "#{factoid} is not a factoid"
     else msg.reply "You don't have permission to do that."

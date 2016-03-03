@@ -41,15 +41,27 @@ class Factoids
       fact = @get alias[1]
     fact
 
+  has: (key) ->
+    if key of @data
+      true
+    false
+
   search: (str) ->
     keys = Object.keys @data
 
     keys.filter (a) =>
+      if @data[a].forgotten
+        return false
       value = @data[a].value
       value.indexOf(str) > -1 || a.indexOf(str) > -1
 
   list: ->
     Object.keys @data
+
+    keys.filter (a) =>
+      if @data[a].forgotten
+        return false
+      true
 
   forget: (key) ->
     fact = @get key
@@ -59,19 +71,14 @@ class Factoids
 
   remember: (key) ->
     fact = @get key
-
     if fact
       fact.forgotten = false
-
     fact
 
   drop: (key) ->
     key = key.toLowerCase()
-    console.log "trying to drop #{key}"
-    if @get key, false
+    if @has key
       delete @data[key]
-    else
-      console.log "did not find " + @data[key]
-      false
+    else false
 
 module.exports = Factoids
