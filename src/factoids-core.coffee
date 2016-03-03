@@ -67,8 +67,11 @@ class Factoids
 
   drop: (key) ->
     key = key.toLowerCase()
+    console.log "trying to drop #{key}"
     if @get key, false
       delete @data[key]
-    else false
+    else
+      console.log "did not find " + @data[key]
+      false
 
 module.exports = Factoids

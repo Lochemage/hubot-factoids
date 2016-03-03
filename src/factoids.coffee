@@ -115,5 +115,5 @@ module.exports = (robot) ->
         msg.reply "OK, #{factoid} has been dropped"
       else
         console.log "failed with #{factoid}"
-        msg.reply '#{factoid} is not a factoid'
+        msg.reply "#{factoid} is not a factoid"
     else msg.reply "You don't have permission to do that."
