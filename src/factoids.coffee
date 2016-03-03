@@ -32,26 +32,26 @@ module.exports = (robot) ->
   factoids = new Factoids robot
 
   # <factoid>?
-  robot.hear /(.{3,})\?/i, (msg) ->
+  robot.hear /(.+)\?/i, (msg) ->
     fact = factoids.get msg.match[1]
     if fact and not fact.forgotten
       fact.popularity++
       msg.reply msg.match[1] + " is " + fact.value
 
   # tell <user> about <factoid>
-  robot.hear /^~tell (.+) about (.{3,})/i, (msg) ->
+  robot.hear /^~tell (.+?) about (.+)/i, (msg) ->
     fact = factoids.get msg.match[2]
     if fact and not fact.forgotten
       fact.popularity++
       msg.send msg.match[1] + ": " + msg.match[2] + " is " + fact.value
 
   # <factoid> is also <value>
-  robot.hear /^~(.{3,}) is also (.+)/i, (msg) ->
+  robot.hear /^~(.+?) is also (.+)/i, (msg) ->
     [key, value] = [msg.match[1], msg.match[2]]
     factoids.add key, value, msg.message.user.name
 
   # <factoid> edit <value>
-  robot.hear /^~(.{3,}) edit s\/(.+)\/(.+)\/(.*)/i, (msg) ->
+  robot.hear /^~(.+?) edit s\/(.+)\/(.+)\/(.*)/i, (msg) ->
     key = msg.match[1]
     re = new RegExp(msg.match[2], msg.match[4])
     fact = factoids.get key
@@ -65,7 +65,7 @@ module.exports = (robot) ->
       msg.reply 'Not a factoid'
 
   # <factoid> is <value>
-  robot.hear /^~(.{3,}) is (.+)/i, (msg) ->
+  robot.hear /^~(.+?) is (.+)/i, (msg) ->
     [key, value] = [msg.match[1], msg.match[2]]
     factoid = factoids.set key, value, msg.message.user.name
 
@@ -73,20 +73,20 @@ module.exports = (robot) ->
       msg.reply "OK, #{key} is #{factoid.value}"
 
   # <factoid> alias of <value>
-  robot.hear /^~(.{3,}) alias of (.{3,})/i, (msg) ->
+  robot.hear /^~(.+?) alias of (.+)/i, (msg) ->
     [key, target] = [msg.match[1], msg.match[2]]
     who = msg.message.user.name
     msg.reply "OK, aliased #{key} to #{target}" if factoids.set key, "@#{msg.match[2]}", msg.message.user.name, false
 
   # forget <factoid>
-  robot.respond /forget (.{3,})/i, (msg) =>
+  robot.respond /forget (.+)/i, (msg) =>
     if factoids.forget msg.match[1]
       msg.reply "OK, forgot #{msg.match[1]}"
     else
       msg.reply 'Not a factoid'
 
   # remember <factoid>
-  robot.respond /remember (.{3,})/i, (msg) =>
+  robot.respond /remember (.+)/i, (msg) =>
     factoid = factoids.remember msg.match[1]
     if factoid? and not factoid.forgotten
       msg.reply "OK, #{msg.match[1]} is #{factoid.value}"
@@ -97,7 +97,7 @@ module.exports = (robot) ->
   robot.respond /factoids/i, (msg) ->
     msg.send factoids.list().join('\n')
 
-  robot.respond /search (.{3,})/i, (msg) =>
+  robot.respond /search (.+)/i, (msg) =>
     factoids = factoids.search msg.match[1]
 
     if factoids.length > 0
@@ -105,7 +105,7 @@ module.exports = (robot) ->
     else
       msg.reply 'No factoids matched'
 
-  robot.respond /drop (.{3,})/i, (msg) =>
+  robot.respond /drop (.+)/i, (msg) =>
     user = msg.envelope.user
     isAdmin = robot.auth?.hasRole(user, 'factoids-admin') or robot.auth?.hasRole(user, 'admin')
     if isAdmin or not robot.auth?
