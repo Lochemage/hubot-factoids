@@ -43,8 +43,11 @@ class Factoids
 
   has: (key) ->
     if key of @data
-      return true
-    false
+      console.log "Has key"
+      true
+    else
+      console.log "No key"
+      false
 
   search: (str) ->
     keys = Object.keys @data
