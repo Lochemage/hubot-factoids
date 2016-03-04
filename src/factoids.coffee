@@ -39,20 +39,20 @@ module.exports = (robot) ->
 
   robot.hear /^~(.+)/i, (msg) ->
     # tell <user> about <factoid>
-    if match = /^~tell (.+) about (.+)/i.exec msg.match
-      factoid = factoids.get msg.match[2]
+    if match = /^~tell (.+?) about (.+)/i.exec msg.message.text
+      factoid = factoids.get match[2]
       if factoid and not factoid.forgotten
         factoid.popularity++
-        msg.send msg.match[1] + ": " + msg.match[2] + " is " + factoid.value
+        msg.send match[1] + ": " + match[2] + " is " + factoid.value
     # <factoid> is alias of <value>
-    else if match = /^~(.+?) alias of (.+)/i.exec msg.match
+    else if match = /^~(.+?) alias of (.+)/i.exec msg.message.text
       msg.reply "OK, #{match[1]} is now an alias of #{match[2]}" if factoids.set match[1], "@#{match[2]}", msg.message.user.name, false
     # <factoid> is also <value>
-    else if match = /^~(.+?) is also (.+)/i.exec msg.match
+    else if match = /^~(.+?) is also (.+)/i.exec msg.message.text
       factoid = factoids.add match[1], match[2], msg.message.user.name
       msg.reply "OK, #{match[1]} is also #{match[2]}"
     # <factoid> is <value>
-    else if match = /^~(.+?) is (.+)/i.exec msg.match
+    else if match = /^~(.+?) is (.+)/i.exec msg.message.text
       factoid = factoids.set match[1], match[2], msg.message.user.name
       msg.reply "OK, #{match[1]} is #{factoid.value}"
 
