@@ -32,7 +32,7 @@ class Factoids
   add: (key, value, who, resolveAlias) ->
     fact = @get key, resolveAlias
     fact = fact + ", and is also " + value
-    @set key, fact, who, resolveAlias
+    @set key, fact.value, who, resolveAlias
 
   get: (key, resolveAlias = true) ->
     fact = @data[key.toLowerCase()]
