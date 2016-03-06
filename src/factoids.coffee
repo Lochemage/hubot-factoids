@@ -15,7 +15,6 @@
 #   ~<factoid> is also <some phrase, link, whatever> - Adds another phrase to a factoid.
 #   ~<factoid> alias of <factoid> - Add an alternate name for a factoid.
 #   ~tell <user> about <factoid> - Tells the user about a factoid, if it exists
-#   hubot no, <factoid> is <some phrase, link, whatever> - Replaces the full definition of a factoid
 #   hubot forget <factoid> - Forget a factoid.
 #   hubot remember <factoid> - Remember a previously forgotten factoid
 #   hubot drop <factoid> - Permanently forget a factoid
