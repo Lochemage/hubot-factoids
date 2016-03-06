@@ -13,7 +13,7 @@
 #   <factoid>? - Prints the factoid, if it exists.
 #   ~<factoid> is <some phrase, link, whatever> - Creates or overwrites a factoid.
 #   ~<factoid> is also <some phrase, link, whatever> - Adds another phrase to a factoid.
-#   ~<factoid> alias of <factoid> - Add an alternate name for a factoid.
+#   ~<factoid> is alias of <factoid> - Add an alternate name for a factoid.
 #   ~tell <user> about <factoid> - Tells the user about a factoid, if it exists
 #   hubot forget <factoid> - Forget a factoid.
 #   hubot remember <factoid> - Remember a previously forgotten factoid
@@ -44,7 +44,7 @@ module.exports = (robot) ->
         factoid.popularity++
         msg.send match[1] + ": " + match[2] + " is " + factoid.value
     # <factoid> is alias of <value>
-    else if match = /^~(.+?) alias of (.+)/i.exec msg.message.text
+    else if match = /^~(.+?) is alias of (.+)/i.exec msg.message.text
       msg.reply "OK, #{match[1]} is now an alias of #{match[2]}" if factoids.set match[1], "@#{match[2]}", msg.message.user.name, false
     # <factoid> is also <value>
     else if match = /^~(.+?) is also (.+)/i.exec msg.message.text
