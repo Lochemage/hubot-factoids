@@ -55,21 +55,23 @@ class Factoids
       value = @data[a].value
       value.indexOf(str) > -1 || a.indexOf(str) > -1
 
+  ref: (fact, aliases) ->
+    aliasKey = fact.value.match(/^@([^@].+)$/i)
+    if aliasKey
+      aliases.push key
+      key = aliasKey[1]
+      # Check for multi-tiered aliases.
+      return @ref @data[key], aliases
+    {
+      aliases: aliases
+      value: fact.value
+      key: key
+    }
+
   list: ->
     map = {}
     keys = Object.keys @data
-
-    __getAliasRef = (fact, aliases) ->
-      aliasKey = fact.value.match(/^@([^@].+)$/i)
-      if aliasKey
-        aliases.push key
-        key = aliasKey[1]
-        # Check for multi-tiered aliases.
-        return __getAliasRef(self.data[key], aliases)
-      {
-        aliases: aliases
-        value: fact.value
-      }
+    key = ''
 
     i = 0
     while i < keys.length
@@ -78,9 +80,11 @@ class Factoids
       if fact.forgotten
         ++i
         continue
-      self = this
-      data = __getAliasRef(fact, [])
-      if !map.hasOwnProperty(data.value)
+      data = @ref fact, []
+      if data.key
+        key = data.key
+
+      if !map[key]
         map[key] =
           aliases: []
           value: ''
@@ -89,7 +93,7 @@ class Factoids
       ++i
     result = []
     for name of map
-      str = '  ' + map[name]
+      str = map[name]
       if map[name].aliases.length
         str += ' (' + map[key].aliases.join(', ') + ')'
       result.push str
