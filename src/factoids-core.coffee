@@ -55,15 +55,13 @@ class Factoids
       value = @data[a].value
       value.indexOf(str) > -1 || a.indexOf(str) > -1
 
-  ref: (key, fact, aliases) ->
+  ref: (key, fact) ->
     aliasKey = fact.value.match(/^@([^@].+)$/i)
     if aliasKey
-      aliases.push key
       key = aliasKey[1]
       # Check for multi-tiered aliases.
-      return @ref key, @data[key], aliases
+      return @ref key, @data[key]
     {
-      aliases: aliases
       value: fact.value
       key: key
     }
@@ -76,18 +74,22 @@ class Factoids
     i = 0
     while i < keys.length
       key = keys[i]
+      okey = key
       fact = @data[key]
       if fact.forgotten
         ++i
         continue
       data = @ref key, fact, []
-      key = data.key
+      if data.key != key
+        key = data.key
 
       if !map[key]
         map[key] =
           aliases: []
           value: ''
-      map[key].aliases = map[key].aliases.concat(data.aliases)
+
+      if key != okey
+        map[key].aliases.push okey
       map[key].value = data.value
       ++i
     result = []
