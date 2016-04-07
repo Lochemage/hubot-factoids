@@ -63,7 +63,7 @@ class Factoids
       aliasKey = fact.value.match(/^@([^@].+)$/i)
       if aliasKey
         aliases.push key
-        key = alias[1]
+        key = aliasKey[1]
         # Check for multi-tiered aliases.
         return __getAliasRef(self.data[key], aliases)
       {
